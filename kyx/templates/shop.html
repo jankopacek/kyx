@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} – {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
+
+{% block content %}
+<div class="container py-5">
+  <p class="section-label mb-2">{{ trans(key="nav_shop", lang=lang) }}</p>
+  <h1 class="section-heading">{{ section.title }}</h1>
+  {{ section.content | safe }}
+
+  {% if section.extra.products %}
+  <h2 class="section-heading mt-4">{{ trans(key="products_heading", lang=lang) }}</h2>
+  <div class="row g-3 mb-4">
+    {% for product in section.extra.products %}
+    <div class="col-md-6">
+      <div class="kyx-card">
+        <h3>{{ product.name }}</h3>
+        <p class="mb-0" style="text-transform:none;color:rgba(255,255,255,.75);">{{ product.description }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="show-card">
+    <p class="mb-2" style="text-transform:none;">{{ trans(key="order_note", lang=lang) }}</p>
+    <p class="mb-0" style="text-transform:none;">
+      {{ trans(key="order_via", lang=lang) }}:
+      <a href="mailto:info@kyx.cz">info@kyx.cz</a>
+      {% if section.extra.facebook_url %}
+      &middot; <a href="{{ section.extra.facebook_url }}" rel="noopener" target="_blank">Facebook</a>
+      {% endif %}
+    </p>
+  </div>
+</div>
+{% endblock content %}

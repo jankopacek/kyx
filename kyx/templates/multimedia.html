@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} – {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
+
+{% block content %}
+<div class="container py-5">
+  <p class="section-label mb-2">{{ trans(key="nav_multimedia", lang=lang) }}</p>
+  <h1 class="section-heading">{{ section.title }}</h1>
+  {{ section.content | safe }}
+
+  <div class="d-flex flex-wrap gap-3 mb-5">
+    {% if section.extra.youtube_url %}
+    <a href="{{ section.extra.youtube_url }}" class="btn-kyx-outline" rel="noopener" target="_blank">{{ trans(key="watch_on_youtube", lang=lang) }}</a>
+    {% endif %}
+    {% if section.extra.facebook_url %}
+    <a href="{{ section.extra.facebook_url }}" class="btn-kyx-outline" rel="noopener" target="_blank">{{ trans(key="follow_on_facebook", lang=lang) }}</a>
+    {% endif %}
+  </div>
+
+  {% if section.extra.gallery %}
+  <h2 class="section-heading">{{ trans(key="gallery_heading", lang=lang) }}</h2>
+  <div class="row g-3">
+    {% for photo in section.extra.gallery %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="gallery-item">
+        <picture>
+          <source srcset="{{ get_url(path="img/gallery/" ~ photo.src ~ '.webp') }}" type="image/webp">
+          <img src="{{ get_url(path="img/gallery/" ~ photo.src ~ '.jpg') }}"
+               alt="{{ photo.alt }}"
+               width="{{ photo.width }}" height="{{ photo.height }}"
+               loading="lazy">
+        </picture>
+        {% if photo.archive %}
+        <span class="photo-badge">{{ trans(key="archive_photo_badge", lang=lang) }}</span>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

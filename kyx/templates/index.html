@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}{{ config.title }} – {{ trans(key="site_tagline", lang=lang) }}{% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
+
+{% block content %}
+<section class="hero">
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-7">
+        <h1>{{ section.title }}</h1>
+        <p class="lead">{{ trans(key="site_tagline_long", lang=lang) }}</p>
+        <div class="d-flex flex-wrap gap-3 mt-4">
+          {% set kalendar = get_section(path="kalendar/_index.md", lang=lang) %}
+          {% set onas = get_section(path="o-nas/_index.md", lang=lang) %}
+          <a href="{{ kalendar.permalink }}" class="btn-kyx">{{ trans(key="nav_calendar", lang=lang) }}</a>
+          <a href="{{ onas.permalink }}" class="btn-kyx-outline">{{ trans(key="nav_about", lang=lang) }}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  {{ section.content | safe }}
+
+  <div class="row g-4 my-2 mb-5">
+    <div class="col-4">
+      <div class="stat">20+</div>
+      <div class="stat-label">{% if lang == "en" %}years on stage{% else %}let na scéně{% endif %}</div>
+    </div>
+    <div class="col-4">
+      <div class="stat">17</div>
+      <div class="stat-label">{% if lang == "en" %}band members{% else %}členů kapely{% endif %}</div>
+    </div>
+    <div class="col-4">
+      <div class="stat">1</div>
+      <div class="stat-label">{% if lang == "en" %}Hospital Records release{% else %}deska na Hospital Records{% endif %}</div>
+    </div>
+  </div>
+
+  {% if section.extra.next_event_title %}
+  <div class="show-card d-flex flex-column flex-sm-row align-items-sm-center gap-4">
+    <div class="date-block">
+      <div class="day">{{ section.extra.next_event_date | date(format="%d") }}</div>
+      <div class="month">{{ section.extra.next_event_date | date(format="%m/%Y") }}</div>
+    </div>
+    <div class="flex-grow-1">
+      <div class="kicker">{{ trans(key="upcoming_show", lang=lang) }}</div>
+      <h2 class="h3 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ section.extra.next_event_title }}</h2>
+      <p class="mb-0 text-white-50">{{ section.extra.next_event_venue }} &middot; {{ section.extra.next_event_date | date(format="%H:%M") }}</p>
+    </div>
+    {% set kalendar = get_section(path="kalendar/_index.md", lang=lang) %}
+    <a href="{{ kalendar.permalink }}" class="btn-kyx-outline text-nowrap">{{ trans(key="event_detail", lang=lang) }}</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock content %}

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} – {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
+
+{% block content %}
+<div class="container py-5">
+  <p class="section-label mb-2">{{ trans(key="history_heading", lang=lang) }}</p>
+  <h1 class="section-heading">{{ section.title }}</h1>
+
+  <div class="row">
+    <div class="col-lg-8">
+      {{ section.content | safe }}
+    </div>
+  </div>
+
+  {% if section.extra.member_groups %}
+  <h2 class="section-heading mt-5">{{ trans(key="members_heading", lang=lang) }}</h2>
+  <div class="row g-3">
+    {% for group in section.extra.member_groups %}
+    <div class="col-6 col-md-4 col-lg-3">
+      <div class="kyx-card">
+        <h3>{{ group.group }}</h3>
+        <ul>
+          {% for member in group.members %}
+          <li>{{ member }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endblock content %}

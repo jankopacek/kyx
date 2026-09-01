@@ -1,0 +1,12 @@
+{
+  "name": "kyx-site",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "postinstall": "npm run copy:bootstrap",
+    "copy:bootstrap": "cp node_modules/bootstrap/dist/css/bootstrap.min.css static/css/bootstrap.min.css && cp node_modules/bootstrap/dist/js/bootstrap.bundle.min.js static/js/bootstrap.bundle.min.js"
+  },
+  "dependencies": {
+    "bootstrap": "^5.3.3"
+  }
+}

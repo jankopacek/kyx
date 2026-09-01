@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="{{ lang }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ config.title }} – {{ trans(key="site_tagline", lang=lang) }}{% endblock title %}</title>
+  <meta name="description" content="{% block description %}{% if section %}{{ section.description | default(value=config.description) }}{% else %}{{ config.description }}{% endif %}{% endblock description %}">
+  <link rel="stylesheet" href="{{ get_url(path="css/bootstrap.min.css") }}">
+  <link rel="stylesheet" href="{{ get_url(path="css/custom.css") }}">
+</head>
+<body>
+  <header class="d-print-none">
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        {% set home = get_section(path="_index.md", lang=lang) %}
+        <a class="navbar-brand" href="{{ get_url(path="@/_index.md", lang=lang) }}">KYX</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navMain" aria-controls="navMain"
+                aria-expanded="false" aria-label="{{ trans(key="toggle_nav", lang=lang) }}">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navMain">
+          <ul class="navbar-nav ms-auto">
+            {% for sub in home.subsections %}
+              {% set s = get_section(path=sub, lang=lang) %}
+              <li class="nav-item">
+                <a class="nav-link{% if current_path and current_path is starting_with(pat=s.path) %} active{% endif %}"
+                   {% if current_path and current_path is starting_with(pat=s.path) %}aria-current="page"{% endif %}
+                   href="{{ s.permalink }}">{{ s.title }}</a>
+              </li>
+            {% endfor %}
+            <li class="nav-item">
+              {% if lang == "en" %}
+              <a class="nav-link lang-switch" href="{{ current_path | replace(from="/en/", to="/") }}" hreflang="cs" aria-label="{{ trans(key="switch_lang_label", lang=lang) }}">🇨🇿</a>
+              {% else %}
+              <a class="nav-link lang-switch" href="/en{{ current_path | default(value="/") }}" hreflang="en" aria-label="{{ trans(key="switch_lang_label", lang=lang) }}">🇬🇧</a>
+              {% endif %}
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    {% block content %}{% endblock content %}
+  </main>
+
+  <footer class="site-footer text-white py-4">
+    <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-2">
+      <p class="mb-0">&copy; {{ now() | date(format="%Y") }} kyx.cz</p>
+      <p class="mb-0">{{ trans(key="footer_credit", lang=lang) }} KYX & Claude</p>
+      <p class="mb-0 d-none d-print-block">info@kyx.cz</p>
+    </div>
+  </footer>
+
+  <script src="{{ get_url(path="js/bootstrap.bundle.min.js") }}" defer></script>
+</body>
+</html>

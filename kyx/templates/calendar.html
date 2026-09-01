@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ section.title }} – {{ config.title }}{% endblock title %}
+{% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
+
+{% block content %}
+<div class="container py-5">
+  <p class="section-label mb-2">{{ trans(key="nav_calendar", lang=lang) }}</p>
+  <h1 class="section-heading">{{ section.title }}</h1>
+
+  {% set today = now() %}
+  {% set_global has_upcoming = false %}
+  {% for event in section.extra.events %}
+    {% if event.date >= today %}{% set_global has_upcoming = true %}{% endif %}
+  {% endfor %}
+
+  <h2 class="section-heading mt-4">{{ trans(key="upcoming_shows", lang=lang) }}</h2>
+  {% if has_upcoming %}
+  <div class="row g-3 mb-5">
+    {% for event in section.extra.events %}
+    {% if event.date >= today %}
+    <div class="col-md-6">
+      <div class="show-card d-flex align-items-center gap-3">
+        <div class="date-block">
+          <div class="day">{{ event.date | date(format="%d") }}</div>
+          <div class="month">{{ event.date | date(format="%m/%Y") }}</div>
+        </div>
+        <div>
+          <h3 class="h5 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ event.title }}</h3>
+          <p class="mb-0 text-white-50">{{ event.venue }} &middot; {{ event.date | date(format="%H:%M") }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <p class="mb-5">{{ trans(key="no_upcoming_shows", lang=lang) }}</p>
+  {% endif %}
+
+  <h2 class="section-heading">{{ trans(key="past_shows", lang=lang) }}</h2>
+  <div class="row g-3 mb-5">
+    {% for event in section.extra.events %}
+    {% if event.date < today %}
+    <div class="col-md-6">
+      <div class="show-card is-past d-flex align-items-center gap-3">
+        <div class="date-block">
+          <div class="day">{{ event.date | date(format="%d") }}</div>
+          <div class="month">{{ event.date | date(format="%m/%Y") }}</div>
+        </div>
+        <div>
+          <h3 class="h5 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ event.title }}</h3>
+          <p class="mb-0 text-white-50">{{ event.venue }}</p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endfor %}
+  </div>
+
+  {{ section.content | safe }}
+</div>
+{% endblock content %}
