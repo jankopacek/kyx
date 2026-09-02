@@ -10,26 +10,29 @@
 
   {% set today = now() %}
   {% set_global has_upcoming = false %}
-  {% for event in section.extra.events %}
+  {% for event in section.pages %}
     {% if event.date >= today %}{% set_global has_upcoming = true %}{% endif %}
   {% endfor %}
 
   <h2 class="section-heading mt-4">{{ trans(key="upcoming_shows", lang=lang) }}</h2>
   {% if has_upcoming %}
   <div class="row g-3 mb-5">
-    {% for event in section.extra.events %}
+    {% for event in section.pages %}
     {% if event.date >= today %}
     <div class="col-md-6">
-      <div class="show-card d-flex align-items-center gap-3">
-        <div class="date-block">
-          <div class="day">{{ event.date | date(format="%d") }}</div>
-          <div class="month">{{ event.date | date(format="%m/%Y") }}</div>
+      <a href="{{ event.permalink }}" class="show-card-link text-decoration-none d-block">
+        <div class="show-card d-flex align-items-center gap-3">
+          <div class="date-block">
+            <div class="day">{{ event.date | date(format="%d") }}</div>
+            <div class="month">{{ event.date | date(format="%m/%Y") }}</div>
+          </div>
+          <div>
+            <h3 class="h5 mb-1 show-card-title">{{ event.title }}</h3>
+            <p class="mb-1 text-white-50">{{ event.extra.venue }} &middot; {{ event.date | date(format="%H:%M") }}</p>
+            <span class="event-detail-link">{{ trans(key="event_detail", lang=lang) }} &rarr;</span>
+          </div>
         </div>
-        <div>
-          <h3 class="h5 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ event.title }}</h3>
-          <p class="mb-0 text-white-50">{{ event.venue }} &middot; {{ event.date | date(format="%H:%M") }}</p>
-        </div>
-      </div>
+      </a>
     </div>
     {% endif %}
     {% endfor %}
@@ -40,19 +43,22 @@
 
   <h2 class="section-heading">{{ trans(key="past_shows", lang=lang) }}</h2>
   <div class="row g-3 mb-5">
-    {% for event in section.extra.events %}
+    {% for event in section.pages %}
     {% if event.date < today %}
     <div class="col-md-6">
-      <div class="show-card is-past d-flex align-items-center gap-3">
-        <div class="date-block">
-          <div class="day">{{ event.date | date(format="%d") }}</div>
-          <div class="month">{{ event.date | date(format="%m/%Y") }}</div>
+      <a href="{{ event.permalink }}" class="show-card-link text-decoration-none d-block">
+        <div class="show-card is-past d-flex align-items-center gap-3">
+          <div class="date-block">
+            <div class="day">{{ event.date | date(format="%d") }}</div>
+            <div class="month">{{ event.date | date(format="%m/%Y") }}</div>
+          </div>
+          <div>
+            <h3 class="h5 mb-1 show-card-title">{{ event.title }}</h3>
+            <p class="mb-1 text-white-50">{{ event.extra.venue }}</p>
+            <span class="event-detail-link">{{ trans(key="event_detail", lang=lang) }} &rarr;</span>
+          </div>
         </div>
-        <div>
-          <h3 class="h5 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ event.title }}</h3>
-          <p class="mb-0 text-white-50">{{ event.venue }}</p>
-        </div>
-      </div>
+      </a>
     </div>
     {% endif %}
     {% endfor %}
