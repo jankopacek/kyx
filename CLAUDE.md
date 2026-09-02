@@ -98,6 +98,17 @@ Translated content is **co-located**, not in a separate `en/` folder: `content/o
   sections, so don't add it there. Nav order across sections is controlled by a `weight`
   field in front matter, not by folder name.
 
+### Calendar events
+
+Concerts are individual Zola pages, not an `extra` array. To add one, create a matching
+pair of content files in `content/kalendar/`: `<slug>.md` (cs) and `<slug>.en.md` (en),
+with front matter `title`, `description`, `date` (the show's date/time) and
+`[extra] venue = "..."` (plus optional `extra.venue_url` for an external ticket link).
+The Markdown body is the event description. The section's `page_template = "event.html"`
+(set in `content/kalendar/_index.md`) means no per-event `template = "..."` line is
+needed. `calendar.html` picks new events up automatically — sorted by date and split into
+upcoming/past — with no template changes required.
+
 ### Multilingual
 
 - Primary language: `cs` (default, no URL prefix)

@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page.title }} – {{ config.title }}{% endblock title %}
+{% block description %}{{ page.description | default(value=config.description) }}{% endblock description %}
+
+{% block content %}
+<div class="container py-5">
+  {% set calendar = get_section(path="kalendar/_index.md", lang=lang) %}
+  <p class="section-label mb-2">
+    <a href="{{ calendar.permalink }}" class="text-decoration-none">&larr; {{ trans(key="back_to_calendar", lang=lang) }}</a>
+  </p>
+  <h1 class="section-heading">{{ page.title }}</h1>
+
+  <div class="show-card d-flex align-items-center gap-3 mb-4">
+    <div class="date-block">
+      <div class="day">{{ page.date | date(format="%d") }}</div>
+      <div class="month">{{ page.date | date(format="%m/%Y") }}</div>
+    </div>
+    <div>
+      <p class="mb-0 fw-bold">{{ page.extra.venue }}</p>
+      <p class="mb-0 text-white-50">{{ page.date | date(format="%H:%M") }}</p>
+    </div>
+  </div>
+
+  {{ page.content | safe }}
+
+  {% if page.extra.venue_url %}
+  <p class="mt-4">
+    <a href="{{ page.extra.venue_url }}" class="btn-kyx-outline" rel="noopener" target="_blank">{{ trans(key="event_tickets", lang=lang) }}</a>
+  </p>
+  {% endif %}
+</div>
+{% endblock content %}
