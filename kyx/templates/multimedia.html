@@ -5,8 +5,7 @@
 
 {% block content %}
 <div class="container py-5">
-  <p class="section-label mb-2">{{ trans(key="nav_multimedia", lang=lang) }}</p>
-  <h1 class="section-heading">{{ section.title }}</h1>
+  <h1 class="section-label mb-2">{{ trans(key="nav_multimedia", lang=lang) }}</h1>
   {{ section.content | safe }}
 
   <div class="d-flex flex-wrap gap-3 mb-5">
@@ -20,24 +19,46 @@
 
   {% if section.extra.gallery %}
   <h2 class="section-heading">{{ trans(key="gallery_heading", lang=lang) }}</h2>
-  <div class="row g-3">
+  <div class="gallery-grid d-flex flex-wrap gap-2">
     {% for photo in section.extra.gallery %}
-    <div class="col-6 col-md-4 col-lg-3">
-      <div class="gallery-item">
-        <picture>
-          <source srcset="{{ get_url(path="img/gallery/" ~ photo.src ~ '.webp') }}" type="image/webp">
-          <img src="{{ get_url(path="img/gallery/" ~ photo.src ~ '.jpg') }}"
-               alt="{{ photo.alt }}"
-               width="{{ photo.width }}" height="{{ photo.height }}"
-               loading="lazy">
-        </picture>
-        {% if photo.archive %}
-        <span class="photo-badge">{{ trans(key="archive_photo_badge", lang=lang) }}</span>
-        {% endif %}
-      </div>
-    </div>
+    {% set full_dir = "img/gallery/" %}
+    {% if photo.full %}{% set full_dir = "img/gallery/full/" %}{% endif %}
+    <button type="button" class="gallery-item gallery-trigger"
+            data-lightbox-index="{{ loop.index0 }}"
+            data-full="{{ get_url(path=full_dir ~ photo.src ~ '.jpg') }}"
+            data-full-webp="{{ get_url(path=full_dir ~ photo.src ~ '.webp') }}"
+            data-alt="{{ photo.alt }}"
+            aria-label="{{ trans(key="lightbox_open", lang=lang) }}: {{ photo.alt }}">
+      <picture>
+        <source srcset="{{ get_url(path="img/gallery/" ~ photo.src ~ '.webp') }}" type="image/webp">
+        <img src="{{ get_url(path="img/gallery/" ~ photo.src ~ '.jpg') }}"
+             alt="{{ photo.alt }}"
+             width="{{ photo.width }}" height="{{ photo.height }}"
+             loading="lazy">
+      </picture>
+      {% if photo.archive %}
+      <span class="photo-badge">{{ trans(key="archive_photo_badge", lang=lang) }}</span>
+      {% endif %}
+    </button>
     {% endfor %}
+  </div>
+
+  <div class="lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="{{ trans(key="gallery_heading", lang=lang) }}" hidden>
+    <button type="button" class="lightbox-close" aria-label="{{ trans(key="lightbox_close", lang=lang) }}">&times;</button>
+    <button type="button" class="lightbox-nav lightbox-prev" aria-label="{{ trans(key="lightbox_prev", lang=lang) }}">&#10094;</button>
+    <picture>
+      <source id="lightboxSourceWebp" type="image/webp">
+      <img id="lightboxImage" class="lightbox-image" src="" alt="">
+    </picture>
+    <button type="button" class="lightbox-nav lightbox-next" aria-label="{{ trans(key="lightbox_next", lang=lang) }}">&#10095;</button>
+    <p class="lightbox-counter" id="lightboxCounter"></p>
   </div>
   {% endif %}
 </div>
 {% endblock content %}
+
+{% block extra_body %}
+{% if section.extra.gallery %}
+<script src="{{ get_url(path="js/gallery-lightbox.js") }}" defer></script>
+{% endif %}
+{% endblock extra_body %}

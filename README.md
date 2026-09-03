@@ -78,12 +78,6 @@ cd kyx && zola check
 - Nav order is controlled by the `weight` field in each section's front matter, not by
   file/directory name.
 
-## Design mockups
-
-`mockups/` holds standalone, throwaway HTML/CSS homepage mockups used to pick the visual
-direction before the real templates were built. They're gitignored — not part of the
-deployed site.
-
 ## Deployment
 
 - **Demo (GitHub Pages):** `.github/workflows/deploy.yml` builds and deploys automatically

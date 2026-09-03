@@ -4,6 +4,18 @@
 {% block description %}{{ section.description | default(value=config.description) }}{% endblock description %}
 
 {% block content %}
+{% set kalendar = get_section(path="kalendar/_index.md", lang=lang) %}
+{% set today = now() %}
+{% set_global next_event_permalink = "" %}
+{% for event in kalendar.pages %}
+  {% if event.date >= today and (next_event_permalink == "" or event.date < next_event_date) %}
+    {% set_global next_event_permalink = event.permalink %}
+    {% set_global next_event_date = event.date %}
+    {% set_global next_event_title = event.title %}
+    {% set_global next_event_venue = event.extra.venue %}
+  {% endif %}
+{% endfor %}
+
 <section class="hero">
   <div class="container">
     <div class="row">
@@ -11,7 +23,6 @@
         <h1>{{ section.title }}</h1>
         <p class="lead">{{ trans(key="site_tagline_long", lang=lang) }}</p>
         <div class="d-flex flex-wrap gap-3 mt-4">
-          {% set kalendar = get_section(path="kalendar/_index.md", lang=lang) %}
           {% set onas = get_section(path="o-nas/_index.md", lang=lang) %}
           <a href="{{ kalendar.permalink }}" class="btn-kyx">{{ trans(key="nav_calendar", lang=lang) }}</a>
           <a href="{{ onas.permalink }}" class="btn-kyx-outline">{{ trans(key="nav_about", lang=lang) }}</a>
@@ -39,19 +50,18 @@
     </div>
   </div>
 
-  {% if section.extra.next_event_title %}
+  {% if next_event_permalink %}
   <div class="show-card d-flex flex-column flex-sm-row align-items-sm-center gap-4">
     <div class="date-block">
-      <div class="day">{{ section.extra.next_event_date | date(format="%d") }}</div>
-      <div class="month">{{ section.extra.next_event_date | date(format="%m/%Y") }}</div>
+      <div class="day">{{ next_event_date | date(format="%d") }}</div>
+      <div class="month">{{ next_event_date | date(format="%m/%Y") }}</div>
     </div>
     <div class="flex-grow-1">
       <div class="kicker">{{ trans(key="upcoming_show", lang=lang) }}</div>
-      <h2 class="h3 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ section.extra.next_event_title }}</h2>
-      <p class="mb-0 text-white-50">{{ section.extra.next_event_venue }} &middot; {{ section.extra.next_event_date | date(format="%H:%M") }}</p>
+      <h2 class="h3 mb-1" style="text-transform:none;font-family:'Inter',sans-serif;font-weight:800;">{{ next_event_title }}</h2>
+      <p class="mb-0 text-white-50">{{ next_event_venue }} &middot; {{ next_event_date | date(format="%H:%M") }}</p>
     </div>
-    {% set kalendar = get_section(path="kalendar/_index.md", lang=lang) %}
-    <a href="{{ kalendar.permalink }}" class="btn-kyx-outline text-nowrap">{{ trans(key="event_detail", lang=lang) }}</a>
+    <a href="{{ next_event_permalink }}" class="btn-kyx-outline text-nowrap">{{ trans(key="event_detail", lang=lang) }}</a>
   </div>
   {% endif %}
 </section>

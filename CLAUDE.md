@@ -109,6 +109,27 @@ The Markdown body is the event description. The section's `page_template = "even
 needed. `calendar.html` picks new events up automatically — sorted by date and split into
 upcoming/past — with no template changes required.
 
+### Multimedia gallery
+
+`content/multimedia/_index.md` (cs) and `_index.en.md` (en) each carry their own
+`[[extra.gallery]]` array (front matter isn't shared across languages, so a new photo —
+and any `full = true` flag — must be added to **both** files). Each entry needs `src`,
+`alt`, `width`, `height`, and optionally `archive = true` (shows the "archivní foto"
+badge). The `multimedia.html` template renders every photo twice:
+- **Grid thumbnail** — always `static/img/gallery/<src>.{jpg,webp}`, sized for the grid
+  (a few hundred px). This file is required for every entry.
+- **Lightbox detail** — same file by default. If a higher-resolution version exists, add
+  `full = true` to the entry and place it at `static/img/gallery/full/<src>.{jpg,webp}`;
+  the template then points the lightbox's `data-full`/`data-full-webp` at that folder
+  instead. Most current photos are low-res archive scans with no larger version, so they
+  don't set `full`.
+- Generate the pair with ImageMagick, e.g.:
+  `magick source.jpg -strip -quality 85 static/img/gallery/full/<src>.jpg` and
+  `magick source.jpg -strip -quality 82 static/img/gallery/full/<src>.webp` (libwebp is
+  built into this system's ImageMagick — no separate `cwebp` install needed).
+- The click-to-enlarge lightbox itself (`static/js/gallery-lightbox.js`) needs no changes
+  when adding photos — it reads whatever `data-*` attributes the template renders.
+
 ### Multilingual
 
 - Primary language: `cs` (default, no URL prefix)

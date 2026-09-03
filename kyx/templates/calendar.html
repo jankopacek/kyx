@@ -5,8 +5,7 @@
 
 {% block content %}
 <div class="container py-5">
-  <p class="section-label mb-2">{{ trans(key="nav_calendar", lang=lang) }}</p>
-  <h1 class="section-heading">{{ section.title }}</h1>
+  <h1 class="section-label mb-2">{{ trans(key="nav_calendar", lang=lang) }}</h1>
 
   {% set today = now() %}
   {% set_global has_upcoming = false %}
