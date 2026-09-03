@@ -77,6 +77,7 @@ alt = "Kyx Orchestra performing at the Mlýny venue"
 width = 200
 height = 133
 archive = true
+full = true
 
 [[extra.gallery]]
 src = "kyx-11-hlinsko"

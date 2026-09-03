@@ -272,17 +272,39 @@ a {
 }
 
 /* Gallery */
+.gallery-grid {
+  align-items: flex-start;
+}
+
 .gallery-item {
   position: relative;
   overflow: hidden;
   border-radius: .5rem;
   background: #151517;
+  flex: 0 0 auto;
+  height: 130px;
+}
+
+@media (min-width: 576px) {
+  .gallery-item {
+    height: 160px;
+  }
+}
+
+@media (min-width: 992px) {
+  .gallery-item {
+    height: 200px;
+  }
+}
+
+.gallery-item picture {
+  display: block;
+  height: 100%;
 }
 
 .gallery-item img {
-  width: 100%;
+  width: auto;
   height: 100%;
-  object-fit: cover;
   display: block;
 }
 
@@ -303,6 +325,114 @@ a {
 .photo-badge.illustrative {
   border-color: var(--kyx-red);
   color: var(--kyx-red);
+}
+
+.gallery-trigger {
+  display: block;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+}
+
+.gallery-trigger:focus-visible {
+  outline: 2px solid var(--kyx-red);
+  outline-offset: 2px;
+}
+
+/* Lightbox */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(11, 11, 12, .95);
+  padding: 1rem;
+}
+
+.lightbox[hidden] {
+  display: none;
+}
+
+body.lightbox-open {
+  overflow: hidden;
+}
+
+.lightbox-image {
+  max-width: 90vw;
+  max-height: 85vh;
+  object-fit: contain;
+  border-radius: .25rem;
+}
+
+.lightbox-close,
+.lightbox-nav {
+  position: absolute;
+  border: 1px solid rgba(255, 255, 255, .3);
+  background: rgba(11, 11, 12, .7);
+  color: var(--kyx-white);
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.lightbox-close:hover,
+.lightbox-nav:hover {
+  border-color: var(--kyx-red);
+  color: var(--kyx-red);
+}
+
+.lightbox-close {
+  top: 1rem;
+  right: 1rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  font-size: 1.5rem;
+}
+
+.lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  width: 3rem;
+  height: 3rem;
+  font-size: 1.25rem;
+}
+
+.lightbox-prev {
+  left: .5rem;
+}
+
+.lightbox-next {
+  right: .5rem;
+}
+
+.lightbox-counter {
+  position: absolute;
+  bottom: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  color: rgba(255, 255, 255, .7);
+  font-size: .85rem;
+  letter-spacing: .05em;
+}
+
+@media (min-width: 768px) {
+  .lightbox-nav {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+
+  .lightbox-prev {
+    left: 1.5rem;
+  }
+
+  .lightbox-next {
+    right: 1.5rem;
+  }
 }
 
 /* Footer */
