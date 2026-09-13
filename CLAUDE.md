@@ -129,6 +129,32 @@ badge). The `multimedia.html` template renders every photo twice:
   built into this system's ImageMagick — no separate `cwebp` install needed).
 - The click-to-enlarge lightbox itself (`static/js/gallery-lightbox.js`) needs no changes
   when adding photos — it reads whatever `data-*` attributes the template renders.
+- The grid itself is a Google Photos-style justified layout, computed at runtime by
+  `static/js/gallery-justify.js`: it reads each photo's `width`/`height` attributes (not
+  natural image size, so it doesn't depend on load state) and sets an explicit pixel
+  width/height on every `.gallery-item`, packing each row edge-to-edge with no cropping,
+  at every viewport width (no separate mobile grid mode). It re-runs via a
+  `ResizeObserver` on the grid container, not a `window resize` listener, since that's
+  what reliably catches every width change across browsers. The CSS `.gallery-item`
+  width/height rule in `custom.css` is only the pre-JS/no-JS fallback.
+- **All of that layout arithmetic is done in whole pixels**, and it has to stay that way.
+  Firefox breaks flex lines on the container's exact fractional content width, so a row
+  whose widths + gaps sum to a hair more than that width wraps its last photo onto a line
+  of its own and the row visibly stops short of the right edge; Chrome silently absorbs
+  the same overflow, which is why this only ever showed up in Firefox. The script
+  therefore floors the container width (`getBoundingClientRect()` minus padding/border,
+  not the already-rounded `clientWidth`), re-reads and pins `gap` to an integer pixel
+  value on the container, floors each photo's width, and hands the pixels lost to
+  flooring back out one per photo so each row sums to exactly the available width.
+  Row breaks follow the Google Photos rule: a photo that pushes the row below the target
+  height is kept only if that lands closer to the target than the too-tall row without it.
+- The gallery `<img>` tags deliberately do **not** use `loading="lazy"` (unlike the
+  general rule below), because Firefox's native lazy-load prefetch distance is much
+  smaller than Chrome's: with it on, only the first row or so loads on initial view and
+  everything else sits as broken alt-text until scrolled near — Chrome's much larger
+  prefetch margin was masking this. Since the whole grid is laid out synchronously
+  up-front anyway (not virtualized/paginated), eager loading is the correct trade-off
+  here.
 
 ### Multilingual
 
