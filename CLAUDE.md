@@ -1,4 +1,4 @@
-# Geoaxis – CLAUDE.md
+# CLAUDE.md
 
 ## Keeping this file up to date
 
@@ -34,10 +34,11 @@ Use red/black/white as primary colors, suggest several variants with mobile firs
 .
 ├── README.md             # how to operate this repo (setup, serve, build, deploy)
 ├── Makefile              # `make serve` / `make build` shortcuts
-├── mockups/              # throwaway design mockups, gitignored, not part of the build
+├── .pre-commit-config.yaml  # local Conventional Commits check (commit-msg hook)
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml    # GitHub Pages deployment (demo target)
+│       ├── deploy.yml       # GitHub Pages deployment (demo target)
+│       └── commitlint.yml   # Conventional Commits check on pull requests
 └── kyx/                  # the Zola project — all zola commands run from here
     ├── zola.toml         # base_url, languages, [languages.<lang>.translations]
     ├── package.json      # Bootstrap 5 dep; postinstall copies dist CSS/JS into static/
@@ -194,6 +195,37 @@ Repo-root `.gitignore` must include:
 ```
 mockups/
 ```
+
+---
+
+## Commit conventions
+
+Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/):
+`<type>[optional scope]: <description>`, e.g. `fix(calendar): correct past-event sort
+order` or `docs: update CLAUDE.md with deploy notes`. Common types: `feat`, `fix`, `docs`,
+`style`, `refactor`, `perf`, `test`, `chore`, `ci`, `build`.
+
+`.github/workflows/commitlint.yml` enforces this on every pull request via
+[`wagoid/commitlint-github-action`](https://github.com/wagoid/commitlint-github-action),
+which lints each commit in the PR against `@commitlint/config-conventional` (its default
+fallback — no `commitlint.config.*` file or root `package.json` needed). A PR with a
+non-conforming commit message fails this check; fix it locally with
+`git commit --amend` or `git rebase -i` and force-push the branch.
+
+The same rule is also enforced **locally, before the CI round-trip**, via a
+[`pre-commit`](https://pre-commit.com/) `commit-msg` hook defined in
+`.pre-commit-config.yaml` (using
+[`compilerla/conventional-pre-commit`](https://github.com/compilerla/conventional-pre-commit)).
+Each contributor must install it once per clone:
+
+```bash
+pip install pre-commit   # or: pipx install pre-commit / brew install pre-commit
+pre-commit install --hook-type commit-msg
+```
+
+After that, `git commit` rejects a non-conforming message locally instead of waiting for
+CI. The hook only runs on `commit-msg` — it does not lint file contents, so it doesn't
+replace or overlap with any future pre-commit-stage checks (linting, formatting, etc.).
 
 ---
 

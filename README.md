@@ -15,7 +15,10 @@ built and must be kept up to date as the project evolves.
 ├── README.md                  # this file
 ├── Makefile                   # shortcuts for local serve/build
 ├── mockups/                   # throwaway design mockups (gitignored, local only)
-├── .github/workflows/deploy.yml  # GitHub Pages CI (demo deploy on push to main)
+├── .pre-commit-config.yaml    # local Conventional Commits check (commit-msg hook)
+├── .github/workflows/
+│   ├── deploy.yml              # GitHub Pages CI (demo deploy on push to main)
+│   └── commitlint.yml          # Conventional Commits check on pull requests
 └── kyx/                       # the actual Zola project — all zola commands run from here
     ├── zola.toml
     ├── package.json           # Bootstrap 5, copied into static/ via postinstall
@@ -37,6 +40,16 @@ npm install   # pulls in Bootstrap 5 and copies its CSS/JS into static/
 ```
 
 Run this once, and again any time `package.json` changes.
+
+Also install the local Conventional Commits check (one-time per clone):
+
+```bash
+pip install pre-commit   # or: pipx install pre-commit / brew install pre-commit
+pre-commit install --hook-type commit-msg
+```
+
+This rejects a non-conforming commit message locally instead of waiting for CI — see
+[`CLAUDE.md`](CLAUDE.md#commit-conventions) for the message format.
 
 ## Local development
 
@@ -83,6 +96,10 @@ cd kyx && zola check
 - **Demo (GitHub Pages):** `.github/workflows/deploy.yml` builds and deploys automatically
   on every push to `main`, publishing to `https://jankopacek.github.io/kyx/`. One-time
   manual step: in the GitHub repo, set **Settings → Pages → Source** to "GitHub Actions".
+- **Commit messages:** `.github/workflows/commitlint.yml` checks every commit in a pull
+  request follows [Conventional Commits](https://www.conventionalcommits.org/) (e.g.
+  `fix: ...`, `feat: ...`, `docs: ...`) — see [`CLAUDE.md`](CLAUDE.md#commit-conventions)
+  for the full list of types.
 - **Production (`www.kyx.cz`):** not automated yet — `zola.toml`'s `base_url` is already
   set to the production domain, so `make build` produces production-ready output in
   `kyx/public/`; how that gets uploaded to the live host is still to be defined.
