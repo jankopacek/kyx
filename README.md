@@ -86,3 +86,12 @@ cd kyx && zola check
 - **Production (`www.kyx.cz`):** not automated yet — `zola.toml`'s `base_url` is already
   set to the production domain, so `make build` produces production-ready output in
   `kyx/public/`; how that gets uploaded to the live host is still to be defined.
+
+## License
+
+This site's content is licensed under [Creative Commons Attribution 4.0 International
+(CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/).
+
+In short, you are free to share and adapt the content — including for commercial
+purposes — as long as you give appropriate credit, provide a link to the license, and
+indicate if changes were made.
