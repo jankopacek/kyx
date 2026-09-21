@@ -7,7 +7,7 @@ weight = 1
 [extra]
 [[extra.member_groups]]
 group = "Zpěv"
-members = ["Kristýna Kudrnáčová", "Nikol Pialová"]
+members = ["Kristýna Kudrnáčová", "Kateřina Slavíková"]
 
 [[extra.member_groups]]
 group = "Saxofony"
@@ -23,7 +23,7 @@ members = ["Vilda Cerman", "Filip Krátký", "Honza Šedý", "Fanda Jelínek", "
 
 [[extra.member_groups]]
 group = "Klavír"
-members = ["Dan Mareček"]
+members = ["Daniel Mareček"]
 
 [[extra.member_groups]]
 group = "Kytara"
@@ -35,7 +35,7 @@ members = ["Štěpán Kincl"]
 
 [[extra.member_groups]]
 group = "Bicí"
-members = ["Ondra Štěpán"]
+members = ["Ondra Štěpán", "Ondra Rus"]
 +++
 
 ## 2003–2009: Začátky
